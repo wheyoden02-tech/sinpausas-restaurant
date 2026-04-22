@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>La Cocina del Archipiélago — Castro, Chiloé</title>
+    <meta name="description"
+        content="Restaurante de auténtica cocina chilota en Castro, Chiloé. Curanto al hoyo, mariscos frescos y tradición de tres generaciones frente al mar." />
+    <meta property="og:title" content="La Cocina del Archipiélago — Comida Chilota Auténtica" />
+    <meta property="og:description"
+        content="Desde 1987, la mesa de Chiloé. Mariscos, curanto y el alma del archipiélago." />
+    <meta property="og:type" content="website" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- MapLibre GL JS for 3D Map -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.css" />
+    <script src="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#502c12",
+                        "primary-container": "#6b4226",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#e9b08c",
+                        "secondary": "#506440",
+                        "secondary-container": "#d0e7b9",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#546944",
+                        "tertiary": "#243552",
+                        "tertiary-container": "#3b4c6a",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#fef9f1",
+                        "surface-container": "#f2ede5",
+                        "surface-container-low": "#f8f3eb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ece8e0",
+                        "surface-container-highest": "#e7e2da",
+                        "surface-dim": "#ded9d2",
+                        "surface-variant": "#e7e2da",
+                        "on-surface": "#1d1c17",
+                        "on-surface-variant": "#51443d",
+                        "outline": "#83746c",
+                        "outline-variant": "#d5c3b9",
+                        "inverse-surface": "#32302b",
+                        "inverse-on-surface": "#f5f0e8",
+                        "inverse-primary": "#f4ba96",
+                        "error": "#ba1a1a",
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                    },
+                    fontFamily: {
+                        "headline": ["Newsreader", "Georgia", "serif"],
+                        "body": ["Manrope", "system-ui", "sans-serif"],
+                        "label": ["Manrope", "system-ui", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+
+    <style>
+        /* ========== BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body {
+            background-color: #fef9f1;
+            color: #1d1c17;
+            font-family: 'Manrope', system-ui, sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Ocultar scrollbar cuando se usa dentro de iframe */
+        html, body {
+            -ms-overflow-style: none; /* IE y Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .font-headline {
+            font-family: 'Newsreader', Georgia, serif;
+        }
+
+        /* ========== PRELOADER ========== */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #502c12;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .preloader.done {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .preloader-text {
+            font-family: 'Newsreader', serif;
+            color: #fef9f1;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: preloaderReveal 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .preloader-sub {
+            font-family: 'Manrope', sans-serif;
+            color: rgba(254, 249, 241, 0.5);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: preloaderReveal 0.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .preloader-line {
+            width: 40px;
+            height: 1px;
+            background: rgba(254, 249, 241, 0.3);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preloader-line::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #fef9f1;
+            animation: preloaderLine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes preloaderReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes preloaderLine {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* ========== GRAIN TEXTURE ========== */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* ========== GLASS NAV ========== */
+        .glass-nav {
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            background: rgba(254, 249, 241, 0.75);
+            border-bottom: 1px solid rgba(213, 195, 185, 0.15);
+        }
+
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* ========== GHOST HOVER LINKS ========== */
+        .hover-ghost {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hover-ghost::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -3px;
+            left: 0;
+            background: #502c12;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hover-ghost:hover::after {
+            width: 100%;
+        }
+
+        /* ========== REVEAL ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stagger-1 {
+            transition-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            transition-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            transition-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            transition-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            transition-delay: 0.5s;
+        }
+
+        /* ========== HERO PARALLAX ========== */
+        .hero-image {
+            will-change: transform;
+            transition: transform 0.1s linear;
+        }
+
+        /* ========== MAGNETIC BUTTON ========== */
+        .btn-magnetic {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s ease;
+            will-change: transform;
+        }
+
+        .btn-magnetic:hover {
+            box-shadow: 0 20px 60px rgba(80, 44, 18, 0.25);
+        }
+
+        .btn-magnetic::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #6b4226, #502c12);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-magnetic:hover::before {
+            opacity: 1;
+        }
+
+        /* ========== QUOTE MARK ========== */
+        .quote-mark {
+            font-family: 'Newsreader', serif;
+            font-size: 6rem;
+            line-height: 1;
+            color: #502c12;
+            opacity: 0.12;
+            position: absolute;
+            top: -1rem;
+            left: -0.5rem;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ========== MENU ITEM HOVER ========== */
+        .menu-item {
+            position: relative;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(213, 195, 185, 0.2);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-item:hover {
+            padding-left: 1rem;
+            background: rgba(248, 243, 235, 0.6);
+            border-radius: 0.5rem;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        /* ========== 3D MAP CONTAINER ========== */
+        #map-castro {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            border-radius: 0.75rem;
+        }
+
+        .maplibregl-popup-content {
+            font-family: 'Manrope', sans-serif;
+            border-radius: 0.5rem !important;
+            padding: 1rem 1.25rem !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* ========== SECTION DIVIDER ========== */
+        .section-divider {
+            width: 48px;
+            height: 2px;
+            background: linear-gradient(90deg, #502c12, transparent);
+            margin: 0 auto 2rem;
+        }
+
+        /* ========== SMOOTH SCROLL INDICATOR ========== */
+        .scroll-indicator {
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(8px);
+                opacity: 1;
+            }
+        }
+
+        /* ========== COUNTER ANIMATION ========== */
+        .counter-box {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .counter-number {
+            font-family: 'Newsreader', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #502c12;
+            line-height: 1;
+        }
+
+        /* ========== DARK SECTION ========== */
+        .dark-section {
+            background: linear-gradient(180deg, #32302b 0%, #1d1c17 100%);
+            color: #f5f0e8;
+        }
+
+        /* ========== IMAGE TILT ON HOVER ========== */
+        .tilt-image {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tilt-image:hover {
+            transform: perspective(1000px) rotateY(-3deg) rotateX(2deg) scale(1.02);
+        }
+
+        /* ========== PROGRESS BAR ========== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #502c12, #6b4226, #e9b08c);
+            z-index: 100;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: none;
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-primary-container selection:text-on-primary-container">
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- ======== PRELOADER ======== -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">La Cocina del Archipiélago</div>
+        <div class="preloader-sub">Castro · Chiloé · Chile</div>
+        <div class="preloader-line"></div>
+    </div>
+
+    <!-- ======== NAVIGATION ======== -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-500" id="mainNav">
+        <div class="flex justify-between items-center px-6 md:px-10 py-5 w-full max-w-screen-2xl mx-auto">
+            <a class="font-headline text-xl md:text-2xl font-bold tracking-tighter text-primary" href="#">
+                La Cocina del Archipiélago
+            </a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a class="text-on-surface-variant hover-ghost font-label text-sm tracking-wide" href="#historia">La
+                    Historia</a>
+                <a class="text-on-surface-variant hover-ghost font-label text-sm tracking-wide" href="#menu">El Menú</a>
+                <a class="text-on-surface-variant hover-ghost font-label text-sm tracking-wide"
+                    href="#testimonios">Opiniones</a>
+                <a class="text-on-surface-variant hover-ghost font-label text-sm tracking-wide"
+                    href="#ubicacion">Ubicación</a>
+            </div>
+            <button
+                class="btn-magnetic bg-primary text-on-primary px-6 py-2.5 rounded-xl font-label text-sm font-medium hidden md:block"
+                onclick="document.getElementById('chat-toggle').click()">
+                Reservar Mesa
+            </button>
+            <button class="md:hidden text-primary" id="mobileMenuBtn">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden overflow-hidden transition-all duration-500 max-h-0" id="mobileMenu">
+            <div class="flex flex-col items-center gap-6 py-8 border-t border-outline-variant/15">
+                <a class="text-on-surface-variant font-label text-base tracking-wide" href="#historia"
+                    onclick="closeMobile()">La Historia</a>
+                <a class="text-on-surface-variant font-label text-base tracking-wide" href="#menu"
+                    onclick="closeMobile()">El Menú</a>
+                <a class="text-on-surface-variant font-label text-base tracking-wide" href="#testimonios"
+                    onclick="closeMobile()">Opiniones</a>
+                <a class="text-on-surface-variant font-label text-base tracking-wide" href="#ubicacion"
+                    onclick="closeMobile()">Ubicación</a>
+                <button
+                    class="btn-magnetic bg-primary text-on-primary px-8 py-3 rounded-xl font-label text-sm font-medium mt-2"
+                    onclick="document.getElementById('chat-toggle').click(); closeMobile()">
+                    Reservar Mesa
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ======== HERO ======== -->
+        <section class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden" id="hero">
+            <!-- Parallax Background -->
+            <div class="absolute inset-0 z-0">
+                <img alt="Interior cálido del restaurante con ambiente rústico"
+                    class="w-full h-full object-cover object-center hero-image scale-110" id="heroImg"
+                    src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2600&auto=format&fit=crop" />
+                <div class="absolute inset-0 bg-gradient-to-b from-[#fef9f1]/40 via-transparent to-[#fef9f1]"></div>
+                <div class="absolute inset-0 bg-[#fef9f1]/30 mix-blend-overlay"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center max-w-5xl mx-auto px-6 pt-20">
+                <p
+                    class="font-label text-primary/80 font-semibold tracking-[0.25em] uppercase mb-8 text-xs reveal stagger-1">
+                    Castro · Chiloé · Chile
+                </p>
+                <h1
+                    class="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] text-primary font-bold tracking-[-0.04em] leading-[0.9] mb-8 reveal stagger-2">
+                    Desde 1987,<br />
+                    <span class="italic font-normal">la mesa de Chiloé</span>
+                </h1>
+                <p
+                    class="font-body text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto mb-14 leading-relaxed reveal stagger-3">
+                    Mariscos frescos, curanto al hoyo, y la auténtica cocina del sur en un ambiente cálido y familiar.
+                </p>
+                <button
+                    class="btn-magnetic bg-primary text-on-primary px-10 py-4 rounded-xl font-label text-base font-semibold reveal stagger-4"
+                    onclick="document.getElementById('chat-toggle').click()">
+                    Reservar mesa
+                </button>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 scroll-indicator reveal stagger-5">
+                <div class="w-6 h-10 rounded-full border-2 border-primary/30 flex justify-center pt-2">
+                    <div class="w-1 h-2.5 rounded-full bg-primary/50"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== COUNTER STRIP ======== -->
+        <section class="py-16 md:py-20 bg-surface-container-low border-y border-outline-variant/10">
+            <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="counter-box reveal stagger-1">
+                    <div class="counter-number" data-target="37">0</div>
+                    <p class="font-label text-on-surface-variant text-sm mt-2 tracking-wide">Años de tradición</p>
+                </div>
+                <div class="counter-box reveal stagger-2">
+                    <div class="counter-number" data-target="3">0</div>
+                    <p class="font-label text-on-surface-variant text-sm mt-2 tracking-wide">Generaciones</p>
+                </div>
+                <div class="counter-box reveal stagger-3">
+                    <div class="counter-number" data-target="15">0</div>
+                    <p class="font-label text-on-surface-variant text-sm mt-2 tracking-wide">Platos tradicionales</p>
+                </div>
+                <div class="counter-box reveal stagger-4">
+                    <div class="counter-number" data-target="100">0</div>
+                    <p class="font-label text-on-surface-variant text-sm mt-2 tracking-wide">% ingredientes locales</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== HISTORIA (REFINADA & ELEGANTE) ======== -->
+        <section id="historia" class="py-32 md:py-40 px-6 bg-surface relative">
+            <div class="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-28 items-center">
+
+                <!-- Imagen con movimiento sutil -->
+                <div class="relative reveal-left group perspective-[1200px]">
+                    
+                    <!-- Marco dinámico -->
+                    <div class="absolute -top-8 -left-8 w-32 h-32 border border-outline-variant/30 rounded-2xl transition-transform duration-700 group-hover:translate-x-2 group-hover:translate-y-2"></div>
+                    
+                    <div class="relative overflow-hidden rounded-2xl shadow-[0_40px_100px_rgba(29,28,23,0.15)]">
+                        <img id="historiaImg"
+                             src="https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=1400"
+                             alt="Paisaje costero de Chiloé"
+                             class="w-full h-[420px] sm:h-[480px] md:h-[520px] object-cover transition-transform duration-[1200ms] ease-out will-change-transform group-hover:scale-[1.04]" />
+                        
+                        <!-- Overlay sutil -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+                    </div>
+
+                </div>
+
+                <!-- Texto editorial -->
+                <div class="space-y-10 reveal-right">
+
+                    <div class="space-y-6">
+                        <p class="font-label text-primary/60 text-xs tracking-[0.35em] uppercase">
+                            Nuestra Historia
+                        </p>
+
+                        <h2 class="font-headline text-4xl md:text-5xl lg:text-6xl text-primary font-bold leading-[0.95] tracking-tight">
+                            Tres generaciones<br>
+                            <span class="italic font-normal">frente al mar</span>
+                        </h2>
+
+                        <div class="w-20 h-[2px] bg-primary opacity-30"></div>
+                    </div>
+
+                    <div class="space-y-6 font-body text-lg text-on-surface-variant leading-relaxed max-w-xl">
+                        <p>
+                            Todo comenzó con la abuela María Cárdenas preparando curantos al amanecer.
+                            Sin carta impresa. Sin reservas digitales.
+                            Solo fuego, piedra y mar.
+                        </p>
+
+                        <p>
+                            Hoy mantenemos la misma calma en la cocina. 
+                            Respetamos los tiempos, los ingredientes locales y la memoria de la isla.
+                            La técnica evoluciona, la esencia permanece.
+                        </p>
+                    </div>
+
+                    <p class="font-headline text-2xl text-primary italic pt-4">
+                        Desde 1987.
+                    </p>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======== MENÚ ======== -->
+        <section class="py-28 md:py-36 px-6 bg-surface-container-low" id="menu">
+            <div class="max-w-screen-xl mx-auto">
+                <div class="text-center mb-20 reveal">
+                    <p class="font-label text-primary/60 text-xs tracking-[0.25em] uppercase mb-5">Gastronomía Local</p>
+                    <h2 class="font-headline text-5xl md:text-6xl lg:text-7xl text-primary font-bold tracking-tight">El
+                        Menú</h2>
+                    <div class="section-divider mt-8"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-16">
+                    <!-- DEL MAR -->
+                    <div class="reveal stagger-1">
+                        <h3 class="font-headline text-3xl text-primary italic mb-8">Del mar</h3>
+                        <div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/curanto.jpeg" loading="lazy" alt="Curanto al hoyo" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Curanto al hoyo
+                                            <span class="inline-block w-2 h-2 rounded-full bg-tertiary ml-2 align-middle"
+                                                title="Receta Tradicional"></span>
+                                        </h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$18.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Mariscos, carnes
+                                        ahumadas, papas, milcaos y chapaleles, cocinados sobre piedras calientes.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/cazuela mariscos.jpeg" loading="lazy" alt="Cazuela de mariscos" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Cazuela de mariscos</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$12.000</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Caldo reponedor
+                                        con cholgas, choritos, almejas y piures, servido en paila de greda.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/salmon al cancato.jpeg" loading="lazy" alt="Cancato de Salmón" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Cancato de Salmón</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$15.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Filete de salmón
+                                        relleno con queso, tomate y longaniza ahumada, asado a las brasas.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/pastel de jaiva.jpeg" loading="lazy" alt="Pastel de Jaiba" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Pastel de Jaiba</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$14.000</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Delicada
+                                        desmenuzada de jaiba en suave crema con queso y vino blanco, gratinada al fuego.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/empanada mariscos.jpeg" loading="lazy" alt="Empanada de Mariscos" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Empanada de Mariscos</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$6.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Masa casera
+                                        horneada con relleno de mariscos del día, cebolla caramelizada y merkén.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DE LA TIERRA -->
+                    <div class="reveal stagger-2">
+                        <h3 class="font-headline text-3xl text-primary italic mb-8">De la tierra</h3>
+                        <div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/cordero al palo.jpeg" loading="lazy" alt="Cordero al palo" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Cordero al palo</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$16.000</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Asado lentamente
+                                        durante 4 horas, acompañado de papas chilotas doradas.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/milcao.jpeg" loading="lazy" alt="Milcao frito o hervido" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Milcao frito o hervido
+                                            <span class="inline-block w-2 h-2 rounded-full bg-tertiary ml-2 align-middle"
+                                                title="Receta Tradicional"></span>
+                                        </h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$5.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Masa tradicional
+                                        de papas ralladas y cocidas, rellena con chicharrones.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/chochoca.jpeg" loading="lazy" alt="Chochoca al palo" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Chochoca al palo
+                                            <span class="inline-block w-2 h-2 rounded-full bg-tertiary ml-2 align-middle"
+                                                title="Receta Tradicional"></span>
+                                        </h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$6.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Masa de papas
+                                        envuelta y asada en uslero gigante sobre las brasas, con manteca y chicharrones.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/cazuela de cordero.jpeg" loading="lazy" alt="Cazuela de Cordero" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Cazuela de Cordero</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$10.000</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Caldo consistente
+                                        con trozos de cordero, choclo, zapallo y papas nativas de la isla.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PARA BEBER -->
+                    <div class="reveal stagger-3">
+                        <h3 class="font-headline text-3xl text-primary italic mb-8">Para beber</h3>
+                        <div>
+                            <div class="menu-item group flex gap-5 items-center">
+                                <img src="assets/img/menu/chicha.jpeg" loading="lazy" alt="Chicha de manzana" class="menu-img cursor-zoom-in w-12 h-12 rounded-lg object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline">
+                                        <h4
+                                            class="font-headline text-xl text-on-surface group-hover:text-primary transition-colors">
+                                            Chicha de manzana</h4>
+                                        <span class="font-label text-primary ml-4 shrink-0 font-semibold">$3.500</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-center">
+                                <img src="assets/img/menu/licor de oro.jpeg" loading="lazy" alt="Licor de oro" class="menu-img cursor-zoom-in w-12 h-12 rounded-lg object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline">
+                                        <h4
+                                            class="font-headline text-xl text-on-surface group-hover:text-primary transition-colors">
+                                            Licor de oro</h4>
+                                        <span class="font-label text-primary ml-4 shrink-0 font-semibold">$4.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-center">
+                                <img src="assets/img/menu/navegado.jpeg" loading="lazy" alt="Vino navegado" class="menu-img cursor-zoom-in w-12 h-12 rounded-lg object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline">
+                                        <h4
+                                            class="font-headline text-xl text-on-surface group-hover:text-primary transition-colors">
+                                            Vino navegado</h4>
+                                        <span class="font-label text-primary ml-4 shrink-0 font-semibold">$4.500</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-center">
+                                <img src="assets/img/menu/cerveza chilota.jpeg" loading="lazy" alt="Cerveza artesanal" class="menu-img cursor-zoom-in w-12 h-12 rounded-lg object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline">
+                                        <h4
+                                            class="font-headline text-xl text-on-surface group-hover:text-primary transition-colors">
+                                            Cerveza artesanal de Chiloé</h4>
+                                        <span class="font-label text-primary ml-4 shrink-0 font-semibold">$4.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DULCERÍA -->
+                    <div class="reveal stagger-4">
+                        <h3 class="font-headline text-3xl text-primary italic mb-8">Dulcería local</h3>
+                        <div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/empanada manzana.jpeg" loading="lazy" alt="Empanadas de Manzana" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Empanadas de Manzana</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$4.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Masas horneadas
+                                        con manzanas asadas locales, clavo de olor y canela.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/brazo de reina.jpeg" loading="lazy" alt="Brazo de Reina con Manjar" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Brazo de Reina con Manjar</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$3.500</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Biscocho
+                                        esponjoso enrollado con manjar artesanal de la isla.</p>
+                                </div>
+                            </div>
+                            <div class="menu-item group flex gap-5 items-start">
+                                <img src="assets/img/menu/murta con mebrillo8.jpeg" loading="lazy" alt="Murta con Membrillo" class="menu-img cursor-zoom-in w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-sm shrink-0 mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity" />
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1.5">
+                                        <h4
+                                            class="font-headline text-xl md:text-2xl text-on-surface font-bold group-hover:text-primary transition-colors">
+                                            Murta con Membrillo</h4>
+                                        <span
+                                            class="font-label text-lg text-primary ml-4 shrink-0 font-semibold">$3.000</span>
+                                    </div>
+                                    <p class="font-body text-on-surface-variant text-sm md:text-base pr-4 md:pr-8">Conserva de
+                                        frutas silvestres del bosque chilote, acompañada de queso fresco.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nota inferior -->
+                <div class="mt-16 text-center reveal">
+                    <p class="font-body text-on-surface-variant/60 text-sm flex items-center justify-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-tertiary"></span>
+                        Indica receta tradicional chilota
+                    </p>
+                    <p class="font-body text-on-surface-variant/50 text-xs mt-2">Precios en pesos chilenos. Propina
+                        sugerida no incluida.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== TESTIMONIOS ======== -->
+        <section class="py-28 md:py-36 bg-surface" id="testimonios">
+            <div class="max-w-screen-xl mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <p class="font-label text-primary/60 text-xs tracking-[0.25em] uppercase mb-5">Lo que dicen nuestros
+                        comensales</p>
+                    <h2 class="font-headline text-4xl md:text-5xl text-primary font-bold tracking-tight">Opiniones</h2>
+                    <div class="section-divider mt-8"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                    <!-- Testimonio 1 -->
+                    <div
+                        class="relative p-8 md:p-10 bg-surface-container-lowest rounded-2xl shadow-[0_8px_40px_rgba(29,28,23,0.05)] reveal stagger-1">
+                        <span class="quote-mark">"</span>
+                        <p class="font-headline text-xl md:text-2xl text-on-surface leading-snug relative z-10 mt-8">
+                            "Viajamos desde Puerto Montt en un día frío, y el curanto nos devolvió el alma al cuerpo.
+                            Auténtico sabor a familia."
+                        </p>
+                        <div class="flex items-center gap-4 mt-8">
+                            <img src="https://images.pexels.com/photos/731131/pexels-photo-731131.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
+                                alt="Javiera y Rodrigo"
+                                class="w-14 h-14 rounded-full object-cover shadow-md border-2 border-surface-container" />
+                            <div>
+                                <p class="font-label text-on-surface font-semibold text-sm">Javiera y Rodrigo</p>
+                                <p class="font-label text-on-surface-variant text-xs">Puerto Montt</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonio 2 -->
+                    <div
+                        class="relative p-8 md:p-10 bg-surface-container-lowest rounded-2xl shadow-[0_8px_40px_rgba(29,28,23,0.05)] reveal stagger-2">
+                        <span class="quote-mark">"</span>
+                        <p class="font-headline text-xl md:text-2xl text-on-surface leading-snug relative z-10 mt-8">
+                            "El ambiente de madera cálida y el olor a humo te transportan a otra época. El mejor cordero
+                            al palo de la isla."
+                        </p>
+                        <div class="flex items-center gap-4 mt-8">
+                            <img src="https://images.pexels.com/photos/1155096/pexels-photo-1155096.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"
+                                alt="Pamela y Cristóbal"
+                                class="w-14 h-14 rounded-full object-cover shadow-md border-2 border-surface-container" />
+                            <div>
+                                <p class="font-label text-on-surface font-semibold text-sm">Pamela y Cristóbal</p>
+                                <p class="font-label text-on-surface-variant text-xs">Santiago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== RESERVAS CTA (DARK SECTION) ======== -->
+        <section class="relative py-36 md:py-44 px-6 dark-section overflow-hidden" id="reservas">
+            <!-- Background image with dark overlay -->
+            <div class="absolute inset-0 z-0">
+                <img alt="Interior del restaurante" class="w-full h-full object-cover opacity-20"
+                    src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2600&auto=format&fit=crop" />
+            </div>
+
+            <div class="relative z-10 max-w-3xl mx-auto text-center space-y-10 reveal">
+                <h2 class="font-headline text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9]">
+                    Te esperamos<br /><span class="italic font-normal opacity-70">en la mesa.</span>
+                </h2>
+                <p class="font-body text-[#f5f0e8]/70 text-xl max-w-xl mx-auto leading-relaxed">
+                    Asegura tu lugar junto al fuego. Nuestro comedor es íntimo y las reservas son recomendadas.
+                </p>
+                <button
+                    class="btn-magnetic bg-[#fef9f1] text-primary px-12 py-5 rounded-xl font-label text-lg font-bold mt-6 inline-flex items-center gap-3"
+                    onclick="document.getElementById('chat-toggle').click()">
+                    Habla con nuestra asistente
+                    <span class="material-symbols-outlined text-xl">chat</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ======== UBICACIÓN ======== -->
+        <section class="py-28 md:py-36 px-6 bg-surface" id="ubicacion">
+            <div class="max-w-screen-xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <p class="font-label text-primary/60 text-xs tracking-[0.25em] uppercase mb-5">Visítanos</p>
+                    <h2 class="font-headline text-4xl md:text-5xl text-primary font-bold tracking-tight">Encuéntranos
+                    </h2>
+                    <div class="section-divider mt-8"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                    <!-- Info -->
+                    <div class="space-y-8 reveal-left">
+                        <div class="space-y-5 font-body text-on-surface-variant text-lg">
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">location_on</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Esmeralda 320, Castro</p>
+                                    <p class="text-base">Chiloé, Región de Los Lagos, Chile</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">schedule</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Martes a Domingo</p>
+                                    <p class="text-base">12:30 — 22:00 hrs. (Lunes cerrado)</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">call</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Reservas</p>
+                                    <p class="text-base">+56 9 8765 4321</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">local_parking</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Estacionamiento</p>
+                                    <p class="text-base">Acceso posterior por calle Blanco</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">payments</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Medios de pago</p>
+                                    <p class="text-base">Efectivo, Redcompra, Tarjetas de Crédito y Transferencias</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-start gap-5 p-4 rounded-xl hover:bg-surface-container-low transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-primary text-2xl mt-0.5 shrink-0">accessible</span>
+                                <div>
+                                    <p class="font-semibold text-on-surface">Accesibilidad</p>
+                                    <p class="text-base">Local adaptado para personas con movilidad reducida</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3D Map -->
+                    <div class="reveal-right">
+                        <div
+                            class="bg-surface-container rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(29,28,23,0.1)] aspect-square lg:aspect-auto lg:h-[550px]">
+                            <div id="map-castro"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="bg-inverse-surface text-inverse-on-surface">
+        <div class="max-w-screen-xl mx-auto px-6 py-16 md:py-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <p class="font-headline text-2xl font-bold tracking-tight text-inverse-primary italic">La Cocina del
+                        Archipiélago</p>
+                    <p class="font-body text-sm text-inverse-on-surface/50 leading-relaxed">
+                        Auténtica cocina chilota heredada por tres generaciones. Sabores de la tierra y el mar del
+                        archipiélago.
+                    </p>
+                </div>
+                <!-- Links -->
+                <div class="space-y-4">
+                    <p class="font-label text-xs tracking-[0.2em] uppercase text-inverse-on-surface/40">Navegación</p>
+                    <div class="flex flex-col gap-3">
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#historia">La Historia</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#menu">El Menú</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#testimonios">Opiniones</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#ubicacion">Ubicación</a>
+                    </div>
+                </div>
+                <!-- Social -->
+                <div class="space-y-4">
+                    <p class="font-label text-xs tracking-[0.2em] uppercase text-inverse-on-surface/40">Síguenos</p>
+                    <div class="flex flex-col gap-3">
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#">Instagram</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#">Facebook</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#">TripAdvisor</a>
+                        <a class="font-body text-sm text-inverse-on-surface/70 hover:text-inverse-primary transition-colors"
+                            href="#">Contacto</a>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t border-inverse-on-surface/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="font-body text-xs text-inverse-on-surface/30">© 2026 La Cocina del Archipiélago. Maderas y
+                    Niebla de Chiloé.</p>
+                <p class="font-body text-xs text-inverse-on-surface/20">Hecho con ❤️ en el fin del mundo.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <button class="hidden" id="chat-toggle">Toggle Chat</button>
+    <div id="chat-widget">
+        <!-- FAB -->
+        <button id="cw-fab"
+            class="fixed bottom-6 right-6 z-[9000] w-14 h-14 rounded-full bg-primary text-on-primary shadow-xl flex items-center justify-center transition-transform duration-200 hover:scale-105 active:scale-95"
+            aria-label="Abrir chat con Camila">
+            <span class="material-symbols-outlined" style="font-size:28px">chat</span>
+        </button>
+
+        <!-- Panel -->
+        <div id="cw-panel"
+            class="fixed bottom-24 right-6 z-[9000] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right"
+            style="background:#fef9f1; max-height: 520px; transform: scale(0); opacity: 0; pointer-events: none;">
+
+            <!-- Header -->
+            <div class="flex items-center gap-3 px-4 py-3" style="background:#502c12;">
+                <div class="w-9 h-9 rounded-full bg-[#6b4226] flex items-center justify-center text-white font-headline font-semibold text-sm shrink-0">
+                    C
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-on-primary font-label font-semibold text-sm leading-none">Camila</p>
+                    <p class="text-on-primary/60 font-label text-xs mt-0.5">Asistente del restaurante</p>
+                </div>
+                <button id="cw-close" class="text-on-primary/70 hover:text-on-primary transition-colors" aria-label="Cerrar chat">
+                    <span class="material-symbols-outlined" style="font-size:20px">close</span>
+                </button>
+            </div>
+
+            <!-- Messages -->
+            <div id="cw-messages" class="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3" style="min-height:240px;">
+                <!-- Welcome message -->
+                <div class="flex gap-2 items-end">
+                    <div class="w-6 h-6 rounded-full bg-[#6b4226] flex items-center justify-center text-white font-label text-xs shrink-0 mb-0.5">C</div>
+                    <div class="rounded-2xl rounded-bl-sm px-3 py-2 text-sm font-body max-w-[80%]" style="background:#f2ede5; color:#1d1c17;">
+                        ¡Hola! Soy Camila, tu asistente de La Cocina del Archipiélago 🌊 ¿En qué puedo ayudarte hoy?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing indicator (hidden by default) -->
+            <div id="cw-typing" class="px-4 pb-1 hidden">
+                <div class="flex gap-2 items-end">
+                    <div class="w-6 h-6 rounded-full bg-[#6b4226] flex items-center justify-center text-white font-label text-xs shrink-0">C</div>
+                    <div class="rounded-2xl rounded-bl-sm px-3 py-2 flex gap-1 items-center" style="background:#f2ede5;">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#83746c] animate-bounce" style="animation-delay:0ms"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#83746c] animate-bounce" style="animation-delay:150ms"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#83746c] animate-bounce" style="animation-delay:300ms"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <form id="cw-form" class="flex items-center gap-2 px-3 py-3 border-t" style="border-color:#e7e2da;">
+                <input id="cw-input" type="text" placeholder="Escribe un mensaje…" autocomplete="off"
+                    class="flex-1 rounded-full px-4 py-2 text-sm font-body outline-none border transition-colors"
+                    style="background:#f8f3eb; border-color:#d5c3b9; color:#1d1c17;"
+                    onfocus="this.style.borderColor='#502c12'" onblur="this.style.borderColor='#d5c3b9'" />
+                <button type="submit"
+                    class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                    style="background:#502c12; color:#ffffff;">
+                    <span class="material-symbols-outlined" style="font-size:18px">send</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        // Session ID — fallback UUID for non-secure contexts (file://, plain HTTP)
+        function genUUID() {
+            try { return crypto.randomUUID(); } catch (_) {}
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+        const SESSION_KEY = 'restaurant_session_id';
+        let sessionId;
+        try {
+            sessionId = localStorage.getItem(SESSION_KEY);
+            if (!sessionId) {
+                sessionId = genUUID();
+                localStorage.setItem(SESSION_KEY, sessionId);
+            }
+        } catch (_) {
+            sessionId = genUUID();
+        }
+
+        const WEBHOOK = 'https://n8n.electrorepara.cl/webhook/restaurant';
+
+        const fab = document.getElementById('cw-fab');
+        const panel = document.getElementById('cw-panel');
+        const closeBtn = document.getElementById('cw-close');
+        const messages = document.getElementById('cw-messages');
+        const typing = document.getElementById('cw-typing');
+        const form = document.getElementById('cw-form');
+        const input = document.getElementById('cw-input');
+
+        let isOpen = false;
+
+        function openPanel() {
+            isOpen = true;
+            panel.style.transform = 'scale(1)';
+            panel.style.opacity = '1';
+            panel.style.pointerEvents = 'auto';
+            input.focus();
+        }
+
+        function closePanel() {
+            isOpen = false;
+            panel.style.transform = 'scale(0)';
+            panel.style.opacity = '0';
+            panel.style.pointerEvents = 'none';
+        }
+
+        fab.addEventListener('click', () => isOpen ? closePanel() : openPanel());
+        closeBtn.addEventListener('click', closePanel);
+
+        // Also allow the hidden #chat-toggle button to open
+        document.getElementById('chat-toggle').addEventListener('click', openPanel);
+
+        function appendMessage(text, role) {
+            const isUser = role === 'user';
+            const wrap = document.createElement('div');
+            wrap.className = 'flex gap-2 items-end' + (isUser ? ' justify-end' : '');
+
+            if (!isUser) {
+                const avatar = document.createElement('div');
+                avatar.className = 'w-6 h-6 rounded-full flex items-center justify-center text-white font-label text-xs shrink-0 mb-0.5';
+                avatar.style.background = '#6b4226';
+                avatar.textContent = 'C';
+                wrap.appendChild(avatar);
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = 'rounded-2xl px-3 py-2 text-sm font-body max-w-[80%] whitespace-pre-wrap';
+            if (isUser) {
+                bubble.classList.add('rounded-br-sm');
+                bubble.style.background = '#502c12';
+                bubble.style.color = '#ffffff';
+            } else {
+                bubble.classList.add('rounded-bl-sm');
+                bubble.style.background = '#f2ede5';
+                bubble.style.color = '#1d1c17';
+            }
+            bubble.textContent = text;
+            wrap.appendChild(bubble);
+            messages.appendChild(wrap);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function extractText(raw) {
+            var t = (raw || '').trim();
+            // Intentar parsear JSON (n8n a veces devuelve objetos/arrays)
+            try {
+                var parsed = JSON.parse(t);
+                if (typeof parsed === 'string') {
+                    t = parsed;
+                } else if (Array.isArray(parsed) && parsed.length) {
+                    var item = parsed[0];
+                    t = item.output || item.message || item.text || item.response || item.answer || JSON.stringify(item);
+                } else if (parsed && typeof parsed === 'object') {
+                    t = parsed.output || parsed.message || parsed.text || parsed.response || parsed.answer || JSON.stringify(parsed);
+                }
+            } catch (_) {}
+            // Limpiar prefijo "Response Body:" si aparece
+            return String(t).replace(/^Response Body:\s*/i, '').trim();
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            input.disabled = true;
+            appendMessage(text, 'user');
+
+            typing.classList.remove('hidden');
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                // Usar text/plain evita el CORS preflight (simple request)
+                var res = await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                    body: JSON.stringify({ chatInput: text, sessionId: sessionId }),
+                });
+                var raw = await res.text();
+                var clean = extractText(raw);
+                typing.classList.add('hidden');
+                appendMessage(clean || '…', 'agent');
+            } catch (err) {
+                typing.classList.add('hidden');
+                appendMessage('Lo siento, hubo un problema al conectar. Intenta nuevamente.', 'agent');
+            } finally {
+                input.disabled = false;
+                input.focus();
+            }
+        });
+    })();
+    </script>
+
+    <!-- ======== SCRIPTS ======== -->
+    <script>
+            (function () {
+                'use strict';
+
+                // ========== PRELOADER ==========
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        document.getElementById('preloader').classList.add('done');
+                        // Trigger hero reveals after preloader
+                        setTimeout(() => {
+                            document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('active'));
+                        }, 300);
+                    }, 1200);
+                });
+
+                // ========== MOBILE MENU ==========
+                const mobileBtn = document.getElementById('mobileMenuBtn');
+                const mobileMenu = document.getElementById('mobileMenu');
+                let mobileOpen = false;
+
+                mobileBtn.addEventListener('click', () => {
+                    mobileOpen = !mobileOpen;
+                    if (mobileOpen) {
+                        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                        mobileBtn.querySelector('span').textContent = 'close';
+                    } else {
+                        closeMobile();
+                    }
+                });
+
+                window.closeMobile = function () {
+                    mobileOpen = false;
+                    mobileMenu.style.maxHeight = '0px';
+                    mobileBtn.querySelector('span').textContent = 'menu';
+                };
+
+                // ========== NAV HIDE/SHOW ON SCROLL ==========
+                let lastScroll = 0;
+                const nav = document.getElementById('mainNav');
+
+                window.addEventListener('scroll', () => {
+                    const currentScroll = window.scrollY;
+                    if (currentScroll > lastScroll && currentScroll > 200) {
+                        nav.classList.add('nav-hidden');
+                    } else {
+                        nav.classList.remove('nav-hidden');
+                    }
+                    lastScroll = currentScroll;
+
+                    // Update scroll progress bar
+                    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = Math.min(currentScroll / scrollHeight, 1);
+                    document.getElementById('scrollProgress').style.transform = `scaleX(${progress})`;
+                }, { passive: true });
+
+                // ========== HERO PARALLAX ==========
+                const heroImg = document.getElementById('heroImg');
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY < window.innerHeight) {
+                        const speed = window.scrollY * 0.3;
+                        heroImg.style.transform = `scale(1.1) translateY(${speed}px)`;
+                    }
+                }, { passive: true });
+
+                // ========== HISTORIA IMAGE SUBTLE PARALLAX ==========
+                const historiaImg = document.getElementById('historiaImg');
+                window.addEventListener('scroll', () => {
+                    if (!historiaImg) return;
+                    const rect = historiaImg.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+
+                    if (rect.top < windowHeight && rect.bottom > 0) {
+                        const offset = (rect.top - windowHeight / 2) * -0.05;
+                        historiaImg.style.transform = `scale(1.04) translateY(${offset}px)`;
+                    }
+                }, { passive: true });
+
+                // ========== REVEAL ON SCROLL ==========
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: "0px 0px -60px 0px"
+                });
+
+                document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+                    // Don't observe hero reveals (handled by preloader)
+                    if (!el.closest('#hero')) {
+                        observer.observe(el);
+                    }
+                });
+
+                // ========== COUNTER ANIMATION ==========
+                const counterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const target = parseInt(el.getAttribute('data-target'));
+                            let current = 0;
+                            const increment = target / 60;
+                            const step = () => {
+                                current += increment;
+                                if (current < target) {
+                                    el.textContent = Math.ceil(current);
+                                    requestAnimationFrame(step);
+                                } else {
+                                    el.textContent = target;
+                                    if (target === 100) el.textContent = target + '%';
+                                }
+                            };
+                            step();
+                            counterObserver.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                document.querySelectorAll('.counter-number').forEach(el => counterObserver.observe(el));
+
+                // ========== MAGNETIC BUTTONS ==========
+                document.querySelectorAll('.btn-magnetic').forEach(btn => {
+                    btn.addEventListener('mousemove', (e) => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.transform = 'translate(0, 0)';
+                    });
+                });
+
+                // ========== 3D MAP (MapLibre GL) ==========
+                document.addEventListener('DOMContentLoaded', () => {
+                    const map = new maplibregl.Map({
+                        container: 'map-castro',
+                        style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                        center: [-73.7732, -42.4721],
+                        zoom: 15.5,
+                        pitch: 55,
+                        bearing: -20,
+                        antialias: true,
+                        scrollZoom: false,
+                    });
+
+                    // Add navigation controls
+                    map.addControl(new maplibregl.NavigationControl({
+                        showCompass: true,
+                        showZoom: true,
+                    }), 'bottom-right');
+
+                    // Add custom marker
+                    const markerEl = document.createElement('div');
+                    markerEl.innerHTML = `
+      <div style="
+        width: 48px; height: 48px;
+        background: #502c12;
+        border: 3px solid #fef9f1;
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        box-shadow: 0 6px 20px rgba(80,44,18,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <span style="transform: rotate(45deg); color: #fef9f1; font-size: 20px; font-family: 'Material Symbols Outlined';">restaurant</span>
+      </div>
+    `;
+
+                    new maplibregl.Marker({ element: markerEl, anchor: 'bottom' })
+                        .setLngLat([-73.7732, -42.4721])
+                        .setPopup(
+                            new maplibregl.Popup({ offset: 25, closeButton: false })
+                                .setHTML(`
+            <div style="padding: 4px 0;">
+              <p style="font-family: Newsreader, serif; font-size: 16px; font-weight: 700; color: #502c12; margin-bottom: 4px;">La Cocina del Archipiélago</p>
+              <p style="font-family: Manrope, sans-serif; font-size: 13px; color: #51443d;">Esmeralda 320, Castro, Chiloé</p>
+            </div>
+          `)
+                        )
+                        .addTo(map);
+
+                    // Slow rotation animation for 3D effect
+                    let bearing = -20;
+                    function rotateCamera() {
+                        bearing += 0.01;
+                        map.rotateTo(bearing, { duration: 0 });
+                        requestAnimationFrame(rotateCamera);
+                    }
+
+                    // Start subtle rotation when map is in view
+                    const mapObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                rotateCamera();
+                                mapObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+
+                    mapObserver.observe(document.getElementById('map-castro'));
+                });
+
+            })();
+    </script>
+
+<!-- ===== IMAGE LIGHTBOX ===== -->
+<div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[9999]">
+  <img id="modalImg" class="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl transition-transform duration-300 scale-95" />
+</div>
+
+<script>
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImg");
+
+document.querySelectorAll(".menu-img").forEach(img => {
+  img.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    modalImg.src = img.src;
+    setTimeout(() => modalImg.classList.remove("scale-95"), 10);
+  });
+});
+
+function closeModal() {
+  modalImg.classList.add("scale-95");
+  setTimeout(() => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }, 200);
+}
+
+modal.addEventListener("click", closeModal);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+});
+</script>
+
+</body>
+
+</html>
